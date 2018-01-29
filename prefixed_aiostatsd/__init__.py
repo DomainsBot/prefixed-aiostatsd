@@ -41,7 +41,7 @@ class StatsdClient:
     @contextlib.contextmanager
     def timer(self, name, rate=1.0):
         name = '%s.%s' % (self._prefix, name)
-        yield from self._client.timer(name, rate)
+        yield self._client.timer(name, rate)
 
     async def run(self):
         await self._client.run()

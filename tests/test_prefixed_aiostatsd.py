@@ -30,6 +30,10 @@ class TestStatsdClient(unittest.TestCase):
         self.subject.decr('test')
         self.client.decr.assert_called_with('prefix.test')
 
+    def test_when_using_timer_then_it_does_not_break(self):
+        with self.subject.timer('test'):
+            pass
+
 
 class TestEmptyStatsdClient(unittest.TestCase):
 
