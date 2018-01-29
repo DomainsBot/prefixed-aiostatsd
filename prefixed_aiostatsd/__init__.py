@@ -1,4 +1,5 @@
 import contextlib
+import time
 
 from aiostatsd.client import StatsdClient as StatsdClientBase
 
@@ -40,8 +41,13 @@ class StatsdClient:
 
     @contextlib.contextmanager
     def timer(self, name, rate=1.0):
-        name = '%s.%s' % (self._prefix, name)
-        yield self._client.timer(name, rate)
+        start = time.time()
+        try:
+            yield
+        finally:
+            duration_sec = time.time() - start
+            duration_msec = int(round(duration_sec * 1000))
+            self.send_timer(name, duration_msec, rate=rate)
 
     async def run(self):
         await self._client.run()

@@ -33,6 +33,7 @@ class TestStatsdClient(unittest.TestCase):
     def test_when_using_timer_then_it_does_not_break(self):
         with self.subject.timer('test'):
             pass
+        self.client.send_timer.assert_called_with('prefix.test', 0, rate=1.0)
 
 
 class TestEmptyStatsdClient(unittest.TestCase):
