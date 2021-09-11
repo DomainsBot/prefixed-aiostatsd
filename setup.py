@@ -23,7 +23,7 @@ def load_requirements(fn: str) -> Iterator[str]:
 
 
 setup(name='prefixed-aiostatsd',
-      version='0.1',
+      version='0.2',
       description='Prefixed AioStatsD',
       author='Domainsbot',
       author_email='steven@domainsbot.com',
