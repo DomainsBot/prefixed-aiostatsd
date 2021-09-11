@@ -1,7 +1,9 @@
+from typing import Iterator
+
 from setuptools import setup
 
 
-def load_requirements(fn):
+def load_requirements(fn: str) -> Iterator[str]:
     """Returns the dependencies from a pip requirements file."""
     for line in open(fn):
         if line.startswith('-r'):  # This is an include command to pip.
