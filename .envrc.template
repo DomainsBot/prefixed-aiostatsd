@@ -1,0 +1,2 @@
+# Twine must use codeartifact as default.
+export TWINE_REPOSITORY=codeartifact
