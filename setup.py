@@ -34,7 +34,7 @@ setup(
     ],
     author="Domainsbot",
     author_email="tech@domainsbot.com",
-    url="www.domainsbot.com",
+    url="https://github.com/DomainsBot/prefixed-aiostatsd",
     packages=[
         "prefixed_aiostatsd",
     ],
