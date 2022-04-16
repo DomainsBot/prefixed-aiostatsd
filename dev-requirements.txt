@@ -1,6 +1,6 @@
 -r requirements.txt
 
-coverage
-invoke
+coverage[toml]
+invoke<2
 mamba_runner==0.0.2
 mypy
