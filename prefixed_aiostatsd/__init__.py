@@ -11,12 +11,12 @@ class StatsdClient:
 
     @staticmethod
     def from_host(
-            prefix: str,
-            host: str,
-            port: int,
-            packet_size: int = 512,
-            flush_interval: float = 5.0,
-    ) -> 'StatsdClient':
+        prefix: str,
+        host: str,
+        port: int,
+        packet_size: int = 512,
+        flush_interval: float = 5.0,
+    ) -> "StatsdClient":
         client = StatsdClientBase(host, port, packet_size, flush_interval)
         return StatsdClient(prefix, client)
 
@@ -27,23 +27,23 @@ class StatsdClient:
         self._prefix = prefix
 
     def send_counter(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = '%s.%s' % (self._prefix, name)
+        name = "%s.%s" % (self._prefix, name)
         self._client.send_counter(name, *args, **kwargs)
 
     def send_timer(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = '%s.%s' % (self._prefix, name)
+        name = "%s.%s" % (self._prefix, name)
         self._client.send_timer(name, *args, **kwargs)
 
     def send_gauge(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = '%s.%s' % (self._prefix, name)
+        name = "%s.%s" % (self._prefix, name)
         self._client.send_gauge(name, *args, **kwargs)
 
     def incr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = '%s.%s' % (self._prefix, name)
+        name = "%s.%s" % (self._prefix, name)
         self._client.incr(name, *args, **kwargs)
 
     def decr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = '%s.%s' % (self._prefix, name)
+        name = "%s.%s" % (self._prefix, name)
         self._client.decr(name, *args, **kwargs)
 
     @contextlib.contextmanager
