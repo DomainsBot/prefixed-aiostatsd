@@ -47,13 +47,10 @@ def update(ctx):
     )
     ctx.run("pip install -r dev-requirements.txt")
 
-    ctx.run("pre-commit autoupdate")
-    ctx.run("pre-commit run --all-files")
-
 
 @task(post=[update])
 def setup(ctx):
     """Setup the environment."""
-    ctx.run("pre-commit install")
+    ctx.run("pre-commit install --install-hooks")
 
     # Add here any other setup steps.
