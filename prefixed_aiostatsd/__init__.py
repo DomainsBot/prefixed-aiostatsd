@@ -27,23 +27,23 @@ class StatsdClient:
         self._prefix = prefix
 
     def send_counter(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = "%s.%s" % (self._prefix, name)
+        name = f"{self._prefix}.{name}"
         self._client.send_counter(name, *args, **kwargs)
 
     def send_timer(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = "%s.%s" % (self._prefix, name)
+        name = f"{self._prefix}.{name}"
         self._client.send_timer(name, *args, **kwargs)
 
     def send_gauge(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = "%s.%s" % (self._prefix, name)
+        name = f"{self._prefix}.{name}"
         self._client.send_gauge(name, *args, **kwargs)
 
     def incr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = "%s.%s" % (self._prefix, name)
+        name = f"{self._prefix}.{name}"
         self._client.incr(name, *args, **kwargs)
 
     def decr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = "%s.%s" % (self._prefix, name)
+        name = f"{self._prefix}.{name}"
         self._client.decr(name, *args, **kwargs)
 
     @contextlib.contextmanager
