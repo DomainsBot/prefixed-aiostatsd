@@ -58,11 +58,11 @@ class StatsdClient(IStatsdClient):
 
     @contextlib.contextmanager
     def timer(self, name: str, rate: float = 1.0) -> Iterator[None]:
-        start = time.time()
+        start = time.monotonic()
         try:
             yield
         finally:
-            duration_sec = time.time() - start
+            duration_sec = time.monotonic() - start
             duration_msec = int(round(duration_sec * 1000))
             self.send_timer(name, duration_msec, rate=rate)
 
