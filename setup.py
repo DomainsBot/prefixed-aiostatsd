@@ -25,7 +25,7 @@ def load_requirements(file_name: str) -> Iterator[str]:
 
 setup(
     name="prefixed-aiostatsd",
-    version="1.0",
+    version="1.1",
     description="Prefixed AioStatsD",
     classifiers=[
         "License :: Other/Proprietary License",
