@@ -33,33 +33,28 @@ class StatsdClient(IStatsdClient):
         return StatsdClient(prefix, client)
 
     def __init__(self, prefix: str, client: StatsdClientBase) -> None:
-        assert prefix is not None
+        assert prefix, "Prefix must be defined."
 
         self._client = client
-        self._prefix = prefix
+        self._prefix = prefix + "."
 
     def with_suffix(self, suffix: str) -> IStatsdClient:
-        return StatsdClient(prefix=f"{self._prefix}.{suffix}", client=self._client)
+        return StatsdClient(prefix=self._prefix + suffix, client=self._client)
 
     def send_counter(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = f"{self._prefix}.{name}"
-        self._client.send_counter(name, *args, **kwargs)
+        self._client.send_counter(self._prefix + name, *args, **kwargs)
 
     def send_timer(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = f"{self._prefix}.{name}"
-        self._client.send_timer(name, *args, **kwargs)
+        self._client.send_timer(self._prefix + name, *args, **kwargs)
 
     def send_gauge(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = f"{self._prefix}.{name}"
-        self._client.send_gauge(name, *args, **kwargs)
+        self._client.send_gauge(self._prefix + name, *args, **kwargs)
 
     def incr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = f"{self._prefix}.{name}"
-        self._client.incr(name, *args, **kwargs)
+        self._client.incr(self._prefix + name, *args, **kwargs)
 
     def decr(self, name: str, *args: Any, **kwargs: Any) -> None:
-        name = f"{self._prefix}.{name}"
-        self._client.decr(name, *args, **kwargs)
+        self._client.decr(self._prefix + name, *args, **kwargs)
 
     @contextlib.contextmanager
     def timer(self, name: str, rate: float = 1.0) -> Iterator[None]:
