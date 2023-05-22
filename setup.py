@@ -1,26 +1,26 @@
-from typing import Iterator
+from collections.abc import Iterator
+from contextlib import suppress
 
 from setuptools import setup
 
 
 def load_requirements(file_name: str) -> Iterator[str]:
     """Returns the dependencies from a pip requirements file."""
-    for line in open(file_name):
+    for line in open(file_name, encoding="utf-8"):
         if line.startswith("-r"):  # This is an include command to pip.
-            for req in load_requirements(line.strip().split(" ", 1)[1].strip()):
-                yield req
-        elif line.startswith("-") or "://" in line:
-            pass  # Ignore other type of pip commands and repository installs.
+            yield from load_requirements(line.strip().split(" ", 1)[1].strip())
         else:
             req = line
             for char in "#;":
-                try:
+                with suppress(ValueError):
                     req = req[: req.index(char)]
-                except ValueError:
-                    pass  # Char not found.
-            req = req.strip()
-            if req:
-                yield req
+
+            if line.startswith("-") or "://" in line:
+                pass  # Ignore other type of pip commands and repository installs.
+            else:
+                req = req.strip()
+                if req:
+                    yield req
 
 
 setup(
@@ -32,11 +32,14 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: POSIX :: Linux",
     ],
+    url="https://github.com/DomainsBot/prefixed-aiostatsd",
     author="Domainsbot",
     author_email="tech@domainsbot.com",
-    url="https://github.com/DomainsBot/prefixed-aiostatsd",
     packages=[
         "prefixed_aiostatsd",
     ],
     install_requires=list(load_requirements("requirements.txt")),
+    extras_require={
+        "dev": list(load_requirements("dev-requirements.txt")),
+    },
 )

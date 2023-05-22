@@ -1,13 +1,13 @@
 [tool.black]
 line-length = 100
-target-version = ['py36']
+target-version = ['py310']
 preview = true
 
 [tool.isort]
 skip_gitignore = true
 balanced_wrapping = true
 include_trailing_comma = true
-py_version = 36
+py_version = 310
 line_length = 100
 multi_line_output = 3
 use_parentheses = true
@@ -17,10 +17,12 @@ order_by_type = false
 source = ["prefixed_aiostatsd"]
 
 [tool.mypy]
-python_version = 3.6
+python_version = "3.10"
 
 files = "."
-exclude = "build"
+exclude = ["build"]
+# Disable buggy mypy functionlity we don't use.
+namespace_packages = false
 
 # Display the codes needed for # type: ignore[code] annotations.
 show_error_codes = true
@@ -47,12 +49,47 @@ ignore_missing_imports = true
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = "tasks"
-
-# Invoke does not allow typing annotations.
-disallow_untyped_defs = false
-
-[[tool.mypy.overrides]]
 module = "tests.*"
 # Tests methods are low value.
 disallow_untyped_defs = false
+
+[tool.tbump]
+github_url = "https://github.com/DomainsBot/prefixed-aiostatsd"
+
+[tool.tbump.version]
+current = "0.3"
+
+# Example of a semver regexp.
+# Make sure this matches current_version before
+# using tbump
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+# For each file to patch, add a [[tool.tbump.file]] config
+# section containing the path of the file, relative to the
+# tbump.toml location.
+[[tool.tbump.file]]
+src = "setup.py"
+
+# You can specify a list of commands to
+# run after the files have been patched
+# and before the git commit is made
+
+#  [[tool.tbump.before_commit]]
+#  name = "check changelog"
+#  cmd = "grep -q {new_version} Changelog.rst"
+
+# Or run some commands after the git tag and the branch
+# have been pushed:
+[[tool.tbump.after_push]]
+name = "publish"
+cmd = "inv publish"
