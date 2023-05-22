@@ -1,6 +1,7 @@
 import contextlib
 import time
-from typing import Any, Iterator
+from collections.abc import Iterator
+from typing import Any
 
 from aiostatsd.client import StatsdClient as StatsdClientBase
 
