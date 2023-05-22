@@ -1,3 +1,4 @@
+import abc
 import contextlib
 import time
 from collections.abc import Iterator
@@ -6,9 +7,19 @@ from typing import Any
 from aiostatsd.client import StatsdClient as StatsdClientBase
 
 
-class StatsdClient:
-    """This class is needed in order to add the param :prefix: to the
-    statsd client since is not supported in aiostatsd."""
+class IStatsdClient(StatsdClientBase, metaclass=abc.ABCMeta):
+    def __init__(self) -> None:
+        pass  # Override parent initializer. We don't want implementation inheritance.
+
+    @abc.abstractmethod
+    def with_suffix(self, suffix: str) -> "IStatsdClient":
+        """Returns an IStatsdClient with and additional prefix."""
+
+
+class StatsdClient(IStatsdClient):
+    """This class is needed to add the param :prefix: to the
+    statsd client since is not supported in aiostatsd.
+    """
 
     @staticmethod
     def from_host(
@@ -26,6 +37,9 @@ class StatsdClient:
 
         self._client = client
         self._prefix = prefix
+
+    def with_suffix(self, suffix: str) -> IStatsdClient:
+        return StatsdClient(prefix=f"{self._prefix}.{suffix}", client=self._client)
 
     def send_counter(self, name: str, *args: Any, **kwargs: Any) -> None:
         name = f"{self._prefix}.{name}"
@@ -64,8 +78,11 @@ class StatsdClient:
         await self._client.stop()
 
 
-class EmptyStatsdClient:
+class EmptyStatsdClient(IStatsdClient):
     """Null implementation of StatsdClient."""
+
+    def with_suffix(self, suffix: str) -> IStatsdClient:
+        return self
 
     def send_counter(self, name: str, *args: Any, **kwargs: Any) -> None:
         pass

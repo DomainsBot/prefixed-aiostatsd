@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 from prefixed_aiostatsd import EmptyStatsdClient, StatsdClient
 
 
-class TestStatsdClient(unittest.TestCase):
+class StatsdClientTest(unittest.TestCase):
     def setUp(self):
         self.client = MagicMock()
         self.subject = StatsdClient("prefix", self.client)
@@ -34,8 +34,17 @@ class TestStatsdClient(unittest.TestCase):
             pass
         self.client.send_timer.assert_called_with("prefix.test", 0, rate=1.0)
 
+    def test_when_adding_a_suffix_then_it_returns_the_same_type(self):
+        subject = self.subject.with_suffix("suffix")
 
-class TestEmptyStatsdClient(unittest.TestCase):
+        self.assertIsInstance(subject, type(self.subject))
+
+    def test_when_adding_a_suffix_then_it_sends_metrics_including_the_suffix(self):
+        self.subject.with_suffix("extra").incr("test")
+        self.client.incr.assert_called_with("prefix.extra.test")
+
+
+class EmptyStatsdClientTest(unittest.TestCase):
     def setUp(self):
         self.subject = EmptyStatsdClient()
 
@@ -49,5 +58,11 @@ class TestEmptyStatsdClient(unittest.TestCase):
 
             with self.subject.timer("test"):
                 pass
+
         except Exception as e:
-            raise AssertionError("Unexpected error: %s.", e)
+            raise AssertionError(f"Unexpected error: {e}")
+
+    def test_when_adding_a_suffix_then_it_returns_the_same_type(self):
+        subject = self.subject.with_suffix("suffix")
+
+        self.assertIsInstance(subject, EmptyStatsdClient)
